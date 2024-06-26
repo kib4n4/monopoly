@@ -1,4 +1,4 @@
-
+from player import*
 class Property:
     def __init__(self, name, price, rent, color_group, house_cost, hotel_cost):
         self.name = name
