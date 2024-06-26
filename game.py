@@ -1,11 +1,22 @@
 import random
-def roll_dice():
-    print(input("press enter to roll dice"))
+from board import *
+from player import *
+def rollDice():
 
-    dice1= random.randint(1,6)
-    print(f"dice 1 rolled a:{dice1}")
-    dice2=random.randint(1,6)
-    print(f"dice 2 rolled a:{dice2}")
-    steps_moved= dice1 + dice2
+    input("press enter to roll the die")
 
-    print(f"dice rolled:{steps_moved}")
+dice1 = random.randint(1,6)
+dice2 = random.randint(1,6)
+
+print(f"player rolled :{dice1}")
+print(f"player rolled :{dice2}")
+steps_moved = dice1 + dice2 
+print(f"steps moved :{steps_moved}")
+
+def move(player, roll):
+        # Move the player based on the dice roll and update position on the board.
+        steps_moved = player.position 
+        player.position = (player.position + roll) % len(board)
+        print(f"{player.token} landed on {board[player.position]['name']}")
+
+
