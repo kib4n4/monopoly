@@ -13,10 +13,15 @@ print(f"player rolled :{dice2}")
 steps_moved = dice1 + dice2 
 print(f"steps moved :{steps_moved}")
 
-def move(player, roll):
+
+
+def move(self,player, roll):
         # Move the player based on the dice roll and update position on the board.
-        steps_moved = player.position 
-        player.position = (player.position + roll) % len(board)
-        print(f"{player.token} landed on {board[player.position]['name']}")
+        self.position = (self.position + roll) % len(board)
+        player.properties.append =[]
+        player.properties.append = board[self.position]
+        
+        print(f"{self.token} landed on {board[self.position]['name']}")
+
 
 
