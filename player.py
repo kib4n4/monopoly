@@ -91,6 +91,7 @@ def play_game():
     remaining_tokens = ["Thor", "Strange", "IronMan", "Hawkeye"]
     remaining_tokens.remove(player1.token)
     player2 = Player("Computer", token=random.choice(remaining_tokens))
+    #loops through the remaining tokens
 
     current_player = player1
 
