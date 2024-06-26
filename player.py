@@ -28,7 +28,7 @@ class Player:
         for i, token in enumerate(tokens):
             print(f"{i + 1}. {token}")
         choice = int(input("Enter the number of your choice: ")) - 1
-        while choice <= 0 or choice >= len(tokens):
+        while choice < 0 or choice >= len(tokens):
             print("Invalid choice. Please choose again.")
             choice = int(input("Enter the number of your choice: ")) - 1
         return tokens[choice]
@@ -71,18 +71,18 @@ class Player:
 def movePlayer(player, roll):
     player.move(roll)
 
-def mortgageProperty(player):
-    print(f"{player.token}, you own the following properties:{player.properties}")
-    for i, property in enumerate(player.properties, 1):
-        print(f"{i}. {property['name']}")
+# def mortgageProperty(player):
+#     print(f"{player.token}, you own the following properties:{player.properties}")
+#     for i, property in enumerate(player.properties, 1):
+#         print(f"{i}. {property['name']}")
 
-    choice = int(input("Enter the number of the property you want to mortgage (0 to cancel): "))
-    if choice == 0:
-        return
+#     choice = int(input("Enter the number of the property you want to mortgage (0 to cancel): "))
+#     if choice == 0:
+#         return
 
-    # Adjust for 0-based index
-    selected_property = player.properties[choice - 1]['name']
-    player.mortgaging(selected_property)
+    # # Adjust for 0-based index
+    # selected_property = player.properties[choice - 1]['name']
+    # player.mortgaging(selected_property)
 
 def play_game():
     global player1, player2
@@ -101,10 +101,10 @@ def play_game():
         dice1, dice2 = current_player.rollDice()
         movePlayer(current_player, dice1 + dice2)
 
-        print(f"\n{current_player.token}, do you want to mortgage a property?")
-        mortgage_option = input("Press 'y' to mortgage or 'n' to continue: ").lower()
-        if mortgage_option == 'y':
-            mortgageProperty(current_player)
+        # print(f"\n{current_player.token}, do you want to mortgage a property?")
+        # mortgage_option = input("Press 'y' to mortgage or 'n' to continue: ").lower()
+        # if mortgage_option == 'y':
+        #     mortgageProperty(current_player)
 
         current_player = player1 if current_player == player2 else player2
 

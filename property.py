@@ -1,4 +1,5 @@
-
+from board import *
+from player import *
 class Property:
     def __init__(self, name, price, rent, color_group, house_cost, hotel_cost):
         self.name = name
@@ -16,7 +17,9 @@ class Property:
 #if property has no owner it is bought
 
     def buy_property(self, owner):
+    
         if self.owner is None:
+            square['price'] <= player.money:
             self.owner = owner
         else:
             raise Exception("Property already owned")
@@ -69,26 +72,26 @@ class Property:
 
 # Example usage:
 # Creating a property
-boardwalk = Property(
-    name="Boardwalk",
-    price=400, rent=[50, 200, 600, 1400, 1700, 2000],
-    color_group="Dark Blue", 
-    house_cost=200, 
-    hotel_cost=200
-    )
+# boardwalk = Property(
+#     name="Boardwalk",
+#     price=400, rent=[50, 200, 600, 1400, 1700, 2000],
+#     color_group="Dark Blue", 
+#     house_cost=200, 
+#     hotel_cost=200
+# #     )
 
-# Buying the property
-boardwalk.buy_property("player")
+# # Buying the property
+# boardwalk.buy_property("player")
 
-# Building houses
-boardwalk.build_house()
-boardwalk.build_house()
+# # Building houses
+# boardwalk.build_house()
+# boardwalk.build_house()
 
-# Calculating rent
-print(boardwalk.calculate_rent())  # Output will vary based on the number of houses/hotels
+# # Calculating rent
+# print(boardwalk.calculate_rent())  # Output will vary based on the number of houses/hotels
 
-# Mortgaging the property
-boardwalk.mortgage_property()
+# # Mortgaging the property
+# boardwalk.mortgage_property()
 
-# Unmortgaging the property
-boardwalk.unmortgage_property()
+# # Unmortgaging the property
+# boardwalk.unmortgage_property()
