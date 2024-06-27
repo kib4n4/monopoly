@@ -1,5 +1,7 @@
 from board import *
-from player import *
+# from player import *
+
+
 class Property:
     def __init__(self, name, price, rent, color_group, house_cost, hotel_cost):
         self.name = name
@@ -18,10 +20,7 @@ class Property:
 
     def buy_property(self, owner):
     
-        if self.owner is None:
-            square['price'] <= player.money:
-            self.owner = owner
-        else:
+       
             raise Exception("Property already owned")
 
 #checks if property is mortgaged and  sets it to true if not
@@ -29,6 +28,7 @@ class Property:
     def mortgage_property(self):
         if not self.is_mortgaged:
             self.is_mortgaged = True
+            self.is_mortgaged = []
         else:
             raise Exception("Property is already mortgaged")
 #checks if property is mortgaged and sets it to false if so
@@ -36,6 +36,7 @@ class Property:
 
     def unmortgage_property(self):
         if self.is_mortgaged:
+
             self.is_mortgaged = False
         else:
             raise Exception("Property is not mortgaged")
@@ -70,28 +71,28 @@ class Property:
         return base_rent + self.num_houses * self.rent[self.num_houses]
 
 
-# Example usage:
-# Creating a property
-# boardwalk = Property(
-#     name="Boardwalk",
-#     price=400, rent=[50, 200, 600, 1400, 1700, 2000],
-#     color_group="Dark Blue", 
-#     house_cost=200, 
-#     hotel_cost=200
-# #     )
+#Example usage:
+#Creating a property
+boardwalk = Property(
+    name="Boardwalk",
+    price=400, rent=[50, 200, 600, 1400, 1700, 2000],
+    color_group="Dark Blue", 
+    house_cost=200, 
+    hotel_cost=200
+    )
 
-# # Buying the property
-# boardwalk.buy_property("player")
+ #Buying the property
+boardwalk.buy_property("player")
 
-# # Building houses
-# boardwalk.build_house()
-# boardwalk.build_house()
+ #Building houses
+boardwalk.build_house()
+boardwalk.build_house()
 
-# # Calculating rent
-# print(boardwalk.calculate_rent())  # Output will vary based on the number of houses/hotels
+ #Calculating rent
+print(boardwalk.calculate_rent())  # Output will vary based on the number of houses/hotels
 
-# # Mortgaging the property
-# boardwalk.mortgage_property()
+ #Mortgaging the property
+boardwalk.mortgage_property("player")
 
-# # Unmortgaging the property
-# boardwalk.unmortgage_property()
+ #Unmortgaging the property
+boardwalk.unmortgage_property()
