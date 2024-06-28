@@ -1,6 +1,8 @@
 import random
 #import random module for dice rolling.
 from board import *
+from comp import *
+
 
 
 class Player:
@@ -119,6 +121,7 @@ def play_game():
     remaining_tokens.remove(player1.token)
     player2 = Player("Computer", token=random.choice(remaining_tokens))
 
+
     current_player = player1
     
 
@@ -140,7 +143,23 @@ def play_game():
         if mortgage_option == 'yes':
             mortgaging(current_player)
         
-        current_player = player1 if current_player == player2 else player1
+        current_player = player1 if current_player == player2 else player2
         #switch btwn player1 and player2
+        if current_player ==player2:
+         print("Comps turn")
+         while True:
+             print(f"\n{current_player.token}'s turn.")
+      
+
+
+            
+       
+        
+
+
+
+
+
+        
 
 play_game()
