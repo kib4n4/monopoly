@@ -1,6 +1,7 @@
 import random
 from board import *
 from computer_logic import computerTurn
+from cards import*
 
 class Player:
     def __init__(self, name, token=None, properties=None, is_computer=False):
@@ -32,7 +33,13 @@ class Player:
 
     def move(self, roll):
         self.position = (self.position + roll) % len(board)
+
         current_square = board[self.position]
+        if current_square == "chance":
+
+          return community_chest_card
+        #   community_chest_card=draw_card(community_chest_cards)
+
         print(f"{self.name} moved to square {current_square['square']}: {current_square['name']} (${current_square['price']})")
 
     def buyProperty(self):
