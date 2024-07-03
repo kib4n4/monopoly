@@ -1,19 +1,32 @@
-from main import *
-from property import*
-from player import*
-def computer_decision(buy_property,player: Player, board: list):
-    """Make decisions for the computer player."""
-    if player.money > 500:
-        # Buy properties
-        for square in board:
-            if square['price'] > 0 and square['name'] not in [prop['name'] for prop in player.properties] and player.money >= square['price']:
-             buy_property(player, square)
-            break
+from board import *
 
+def movePlayer(player, roll):
+    #Move the player on the board based on the dice roll.
+    player.move(roll)
 
-    elif player.money < 200:
-        # Mortgage properties
-        for property in player.properties:
-            if property not in player.mortgaged_properties:
-                player.mortgage(property['name'])
-                break
+def computerDecisionToBuy(player):
+    #Make a decision for the computer player to buy a property if possible.
+    property = board[player.position]
+    if property not in player.properties and property not in player.mortgaged_properties:
+        if player.money >= property['price']:
+            player.buyProperty()
+
+def computerDecisionToMortgage(player):
+    #Make a decision for the computer player to mortgage a property if owned.
+    if player.properties:
+        player.mortgageProperty()
+
+def computerTurn(player):
+    #Execute a turn for the computer player.
+    print(f"\n{player.token}'s turn.")
+    dice1, dice2 = player.rollDice()
+    movePlayer(player, dice1 + dice2)
+
+    # Check if the current property can be bought
+    property = board[player.position]
+    if property not in player.properties and property not in player.mortgaged_properties:
+        if player.money >= property['price']:
+            computerDecisionToBuy(player)
+
+    # Check if the computer should mortgage a property
+    computerDecisionToMortgage(player)
