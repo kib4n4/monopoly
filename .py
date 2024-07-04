@@ -1,9 +1,8 @@
 import random
 from board import *
 from computer_logic import computerTurn
-from cards import*
+from cards import *
 
-#defining player class
 class Player:
     def __init__(self, name, token=None, properties=None, is_computer=False):
         self.name = name
@@ -13,15 +12,14 @@ class Player:
         self.mortgaged_properties = []
         self.position = 0
         self.is_computer = is_computer
-        #defining token selection method
+
     def tokenSelection(self):
         tokens = ["Thor", "Strange", "IronMan", "Hawkeye"]
         print("Choose your token:")
-        for i, token in enumerate(tokens):#loop thru the list of tokens
+        for i, token in enumerate(tokens):
             print(f"{i + 1}. {token}")
         choice = int(input("Enter the number of your choice: ")) - 1
-        while choice < 0 or choice >= len(tokens):#ensuring the input is within specified parameters
-
+        while choice < 0 or choice >= len(tokens):
             print("Invalid choice. Please choose again.")
             choice = int(input("Enter the number of your choice: ")) - 1
         return tokens[choice]
@@ -35,14 +33,27 @@ class Player:
 
     def move(self, roll):
         self.position = (self.position + roll) % len(board)
-
         current_square = board[self.position]
-        if current_square == "chance":
 
-          return community_chest_card
-        #   community_chest_card=draw_card(community_chest_cards)
+        if current_square == "chance" and :
+            chance_card = draw_card(chance_cards)
+            handle_card(self, chance_card, [player for player in players if player != self])
+        elif current_square == "community_chest":
+            community_chest_card = draw_card(community_chest_cards)
+            handle_card(self, community_chest_card, [player for player in players if player != self])
+        else:
+            print(f"{self.name} moved to square {current_square['square']}: {current_square['name']} (${current_square['price']})")
 
-        print(f"{self.name} moved to square {current_square['square']}: {current_square['name']} (${current_square['price']})")
+        if isinstance(current_square, dict):
+            if current_square not in self.properties and current_square not in self.mortgaged_properties:
+                # Handle unowned property
+                print(f"{self.token}, you landed on an unowned property: {current_square['name']}.")
+            elif current_square in self.properties:
+                # Handle owned property
+                print(f"{self.token}, you landed on your own property: {current_square['name']}.")
+            elif current_square in self.mortgaged_properties:
+                # Handle mortgaged property
+                print(f"{self.token}, you landed on a mortgaged property: {current_square['name']}.")
 
     def buyProperty(self):
         property = board[self.position]
@@ -58,7 +69,6 @@ class Player:
             print(f"{property['name']} is already owned.")
 
     def mortgageProperty(self):
-        #check that the player owns the property
         if not self.properties:
             print(f"{self.token}, you do not own any properties.")
             return
@@ -71,9 +81,8 @@ class Player:
         
         if choice == 0:
             return
-        #validates property number
+
         if 1 <= choice <= len(self.properties):
-            #retrieve property to mortgage and input its index
             property_to_mortgage = self.properties[choice - 1]
             mortgage_value = property_to_mortgage['price'] // 2
 
@@ -89,9 +98,6 @@ class Player:
 def movePlayer(player, roll):
     player.move(roll)
 
-#defining how to play the game
-#player is propmpted to select token
-#computer randomly slects token from the remaining list
 def play_game():
     global player1, player2
     print("Player 1, please select your token.")
@@ -101,38 +107,28 @@ def play_game():
     player2 = Player("Computer", token=random.choice(remaining_tokens), is_computer=True)
 
     current_player = player1
-    #lets begin the game loop by determining the current player
 
     while True:
         if current_player.is_computer:
-            #handle the computers turn
             computerTurn(current_player)
         else:
-            #if player is human../the player1
             print(f"\n{current_player.token}'s turn.")
             input("Press Enter to roll the dice.\n")
             dice1, dice2 = current_player.rollDice()
-            movePlayer(current_player, dice1 + dice2)#updates the player position based on the total dice rolls
-                                                    #using the moveplayer() method
-            #retrieve the property object from the board based on the current player's position
+            movePlayer(current_player, dice1 + dice2)
+
             property = board[current_player.position]
-            #check if the current player's position is owned and currently mortgaged by current player            
             if property not in current_player.properties and property not in current_player.mortgaged_properties:
                 print(f"\n{current_player.token}, do you want to buy {property['name']} for ${property['price']}?")
                 buy_option = input("Press 'yes' to buy or 'no' to skip: ").lower()
                 if buy_option == 'yes':
-                    current_player.buyProperty()#update player property and finances to reflect purchase of new property
+                    current_player.buyProperty()
 
             print(f"\n{current_player.token}, do you want to mortgage a property?")
             mortgage_option = input("Press 'yes' to mortgage or 'no' to continue: ").lower()
             if mortgage_option == 'yes':
-                current_player.mortgageProperty()#updates the player's mortgaged properties and finances 
-                                                #reflects the mortgage of selected property 
-        #toggle current player between player1 and player2 after each turn
-        #allows the game to alternate between the players during the game loop
+                current_player.mortgageProperty()
+
         current_player = player1 if current_player == player2 else player2
-        #checks if the current player is == player2
-        #if true current player is == player1 
-        #if false set current player to player2
 
 play_game()

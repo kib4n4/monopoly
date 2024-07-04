@@ -127,4 +127,4 @@ def handle_card(player, card, players):
        print(f"{player.name} paid each player $50.")
    elif card == "Collect $150":
        player.money += 150
-       print(f"{player.name} collected $150."
+       print(f"{player.name} collected $150.")
