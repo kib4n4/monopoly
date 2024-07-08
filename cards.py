@@ -49,6 +49,7 @@ def draw_card(cards):
 community_chest_card=draw_card(community_chest_cards)
 chance_card= draw_card(chance_cards)
 
+
 # def draw_card(cards):
 #     return random.choice(chance_cards)
 # print("Chance_cards")

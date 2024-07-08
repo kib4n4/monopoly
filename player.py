@@ -1,111 +1,99 @@
-
+# player.py
 import random
 from board import *
+from cards import draw_card, handle_card, chance_cards, community_chest_cards
 
 class Player:
-    def __init__ (self, name, token=None, properties=None):
+    def __init__(self, name, token=None, properties=None, is_computer=False):
         self.name = name
-        #self.token = token
         self.token = token if token is not None else self.tokenSelection()
         self.money = 1500
-        #self.properties = properties
-        self.properties =  []
-        #if property is not not None, the self.properties is assigned value of properties
-        #if property is None, self.properties is assigned an empty list.
+        self.properties = properties if properties is not None else []
         self.mortgaged_properties = []
+        self.position = 0
+        self.is_computer = is_computer
+        self.in_jail = False
         self.jail_turns = 0
-        self.consecutive_doubles = 0
         self.get_out_of_jail_free = False
-        self.position=0
 
-    # def tokenSelection(self):
-    #     # an instance method for token selection.
-    #     tokens = ["Thor", "strange", "IronMan", "Hawkeye",]
-    #     print("Choose your token:")
     def tokenSelection(self):
         tokens = ["Thor", "Strange", "IronMan", "Hawkeye"]
         print("Choose your token:")
         for i, token in enumerate(tokens):
             print(f"{i + 1}. {token}")
         choice = int(input("Enter the number of your choice: ")) - 1
-        while choice <= 0 or choice >= len(tokens):
+        while choice < 0 or choice >= len(tokens):
             print("Invalid choice. Please choose again.")
             choice = int(input("Enter the number of your choice: ")) - 1
         return tokens[choice]
-        # return random.choice(tokens)
-        #randomly chooses a token from the list of the tokens
 
     def rollDice(self):
-        # Method to simulate rolling two six-sided dice.
         die1 = random.randint(1, 6)
         die2 = random.randint(1, 6)
-        moved1 = die1
-        moved2 = die2
-        movedTo = die1 + die2
-        print(f"hey, you rolled {moved1} and {moved2}")
-        print(f"You rolled a total of {movedTo}")
+        print(f"Hey, you rolled {die1} and {die2}")
+        print(f"You rolled a total of {die1 + die2}")
         return die1, die2
 
-    def move(self, roll):
-        # Move the player based on the dice roll and update position on the board.
+    def move(self, roll, players):
         self.position = (self.position + roll) % len(board)
-        print(f"{self.token} landed on {board[self.position]['name']}")
+        current_square = board[self.position]
 
-    def mortgaging(self, propertyName):
-        # Method for mortgaging properties
-        for property in self.properties:
-            if property['name'] == propertyName:
-                mortgageValue = property['price'] // 2
-                #mortgaging a property, adds half the price of the property to the player's money
-                self.money = self.money + mortgageValue
-                self.mortgaged_properties.append(property)
-                #adds the property to the mortgaged properties list
-                self.properties.remove(property)
-                #removes the property from the player's properties list
-                property['mortgaged'] = True
-                #sets the mortgaged status of the property to True
-                print(f"{self.token} mortgaged {propertyName} for ${mortgageValue}")
-                return
-        print(f"{self.token} does not own {propertyName}")
+        if current_square['name'] == "Chance" and current_square['price']==0:
+            chance_card = draw_card(chance_cards)
+            handle_card(self, chance_card, players)
+        elif current_square['name'] == "Community Chest" and current_square['price']==0:
+            community_chest_card = draw_card(community_chest_cards)
+            handle_card(self, community_chest_card, players)
+        else:
+            print(f"{self.name} moved to square {current_square['square']}: {current_square['name']} (${current_square.get('price', 'N/A')})")
 
-def movePlayer(player, roll):
-    player.move(roll)
+            if 'price' in current_square:
+                if current_square not in self.properties and current_square not in self.mortgaged_properties:
+                    # Handle unowned property
+                    print(f"{self.token}, you landed on an unowned property: {current_square['name']}.")
+                elif current_square in self.properties:
+                    # Handle owned property
+                    print(f"{self.token}, you landed on your own property: {current_square['name']}.")
+                elif current_square in self.mortgaged_properties:
+                    # Handle mortgaged property
+                    print(f"{self.token}, you landed on a mortgaged property: {current_square['name']}.")
 
-def mortgageProperty(player):
-    print(f"{player.token}, you own the following properties:{player.properties}")
-    for i, property in enumerate(player.properties, 1):
-        print(f"{i}. {property['name']}")
+    def buyProperty(self):
+        property = board[self.position]
+        if property not in self.properties and property not in self.mortgaged_properties:
+            if self.money >= property['price']:
+                self.properties.append(property)
+                print(f"{self.token} bought {property['name']} for ${property['price']}")
+                self.money -= property['price']
+                print(f"Your balance is: {self.money}")
+            else:
+                print(f"{self.token} does not have enough money to buy {property['name']}")
+        else:
+            print(f"{property['name']} is already owned.")
 
-    choice = int(input("Enter the number of the property you want to mortgage (0 to cancel): "))
-    if choice == 0:
-        return
+    def mortgageProperty(self):
+        if not self.properties:
+            print(f"{self.token}, you do not own any properties.")
+            return
+        
+        print(f"{self.token}, you own the following properties:")
+        for i, property in enumerate(self.properties, 1):
+            print(f"{i}. {property['name']}")
 
-    # Adjust for 0-based index
-    selected_property = player.properties[choice - 1]['name']
-    player.mortgaging(selected_property)
+        choice = int(input("Enter the number of the property you want to mortgage (0 to cancel): "))
+        
+        if choice == 0:
+            return
 
-def play_game():
-    global player1, player2
-    print("Player 1, please select your token.")
-    player1 = Player("Player 1")
-    remaining_tokens = ["Thor", "Strange", "IronMan", "Hawkeye"]
-    remaining_tokens.remove(player1.token)
-    player2 = Player("Computer", token=random.choice(remaining_tokens))
-    #loops through the remaining tokens
+        if 1 <= choice <= len(self.properties):
+            property_to_mortgage = self.properties[choice - 1]
+            mortgage_value = property_to_mortgage['price'] // 2
 
-    current_player = player1
+            self.money += mortgage_value
+            self.mortgaged_properties.append(property_to_mortgage)
+            self.properties.remove(property_to_mortgage)
+            property_to_mortgage['is_mortgaged'] = True
 
-    while True:
-        print(f"\n{current_player.token}'s turn.")
-        input("Press Enter to roll the dice.\n")
-        dice1, dice2 = current_player.rollDice()
-        movePlayer(current_player, dice1 + dice2)
-
-        print(f"\n{current_player.token}, do you want to mortgage a property?")
-        mortgage_option = input("Press 'y' to mortgage or 'n' to continue: ").lower()
-        if mortgage_option == 'y':
-            mortgageProperty(current_player)
-
-        current_player = player1 if current_player == player2 else player2
-
-play_game()
+            print(f"{self.token} mortgaged {property_to_mortgage['name']} for ${mortgage_value}")
+        else:
+            print("Invalid choice.")
