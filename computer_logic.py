@@ -19,6 +19,10 @@ def computerTurn(player, players):
     print(f"\n{player.token}'s turn.")
     dice1, dice2 = player.rollDice()
     movePlayer(player, dice1 + dice2, players)
+    if current_square['name']== "Go"  and player.position!=0:
+            player.money+=200
+            print(f"{player.name} collected $200 for passing GO")
+
 
     current_square = board[player.position]
     if current_square['name'] == "Chance":

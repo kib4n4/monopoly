@@ -37,6 +37,10 @@ class Player:
     def move(self, roll, players):
         self.position = (self.position + roll) % len(board)
         current_square = board[self.position]
+        if current_square['name']== "Go"  and self.position!=0:
+            self.money+=200
+            print(f"{self.name} collected $200 for passing GO")
+
 
         if current_square['name'] == "Chance" and current_square['price']==0:
             chance_card = draw_card(chance_cards)
@@ -61,6 +65,7 @@ class Player:
     def buyProperty(self):
         property = board[self.position]
         if property not in self.properties and property not in self.mortgaged_properties:
+            
             if self.money >= property['price']:
                 self.properties.append(property)
                 print(f"{self.token} bought {property['name']} for ${property['price']}")
